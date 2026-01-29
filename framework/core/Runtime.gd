@@ -3,42 +3,63 @@ class_name Runtime
 
 const UTILS = preload("res://framework/core/Utils.gd")
 
-var processes: Array[Process] = []
+var disptaches: Array[Dispatchable] = []
 
 func _process(delta: float):
-	if processes.is_empty(): return
+	if disptaches.is_empty(): return
 	
-	UTILS.compact(processes,
-		func(process: Process):
-			return process.update(delta)
+	UTILS.compact(disptaches,
+		func(dispatched: Dispatchable):
+			return dispatched.process.update(delta)
 	)
 
-func handle(its: Array[IT], targets: Array[Node2D], reverse: bool) -> Process.Modifier:
-	var process = Process.new(its, targets, reverse)
-	processes.append(process)
-	
-	return process.modifier
+func dispatch(its: Array[IT], targets: Array[Node2D], reverse: bool) -> Process.Modifier:
+	for dispatched in disptaches:
+		var has_target = targets.any(
+			func(target: Node2D):
+				return target in dispatched.targets
+		)
+
+		if has_target: dispatched.process.modifier.stop()
+
+	var dispatched = Dispatchable.new(targets, its, reverse)
+	disptaches.append(dispatched)
+
+	return dispatched.process.modifier
+
+
+
+class Dispatchable:
+	var process: Process
+	var targets: Array[Node2D]
+
+	func _init(_targets: Array[Node2D], its: Array[IT], reverse: bool):
+		targets = _targets
+		
+		if not targets.size() == its.size(): push_error("Passed in nodes must match track amount.")
+
+		var tracks: Array[Runtime.Track] = []
+		for i in its.size():
+			tracks.append(Runtime.Track.new(its[i], targets[i], reverse))
+		
+		process = Runtime.Process.new(tracks)
 
 
 
 class Process:
+	var _tracks: Array[Runtime.Track]
 	var config: Config
 	var modifier: Modifier
-	var tracks: Array[Runtime.Track]
 	
-	func _init(its: Array[IT], targets: Array[Node2D], reverse: bool):
-		if not targets.size() == its.size(): return
-		
+	func _init(tracks: Array[Runtime.Track]):
+		_tracks = tracks
 		config = Config.new()
 		modifier = Modifier.new(config)
-		for i in its.size(): tracks.append(
-			Runtime.Track.new(its[i], targets[i], reverse)
-		)
 	
 	func update(delta: float) -> bool:
-		if config.pause: return true
+		if config.pause: return false
 		
-		UTILS.compact(tracks,
+		UTILS.compact(_tracks,
 			func(track: Runtime.Track):
 				if config.stop:
 					track.reset()
@@ -47,8 +68,8 @@ class Process:
 				return track.step(delta * config.speed)
 		)
 		
-		if tracks.is_empty(): return false
-		return true
+		if _tracks.is_empty(): return true
+		return false
 	
 	
 	
@@ -117,9 +138,9 @@ class Track:
 		if proceed: config.refresh()
 		
 		current_sequence = config.current_sequence
-		if current_sequence < 0 or current_sequence >= sequences.size(): return false
+		if current_sequence < 0 or current_sequence >= sequences.size(): return true
 		
-		return true
+		return false
 	
 	
 	

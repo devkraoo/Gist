@@ -34,4 +34,4 @@ class Animatable:
 		return self
 	
 	func play(targets: Array[Node2D]) -> Runtime.Process.Modifier:
-		return Gist.RUNTIME.handle(_its, targets, _reverse)
+		return Gist.RUNTIME.dispatch(_its, targets, _reverse)
