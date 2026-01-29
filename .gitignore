@@ -1,0 +1,9 @@
+# Godot 4
+.godot/
+*.uid
+
+# OS
+.DS_Store
+
+# VS Code
+.vscode/
