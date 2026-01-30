@@ -22,7 +22,7 @@ class Builder extends Sequence.Builder:
 		super(_builder)
 	
 	func _build() -> AbsoluteSequence:
-		return AbsoluteSequence.new(config)
+		return AbsoluteSequence.new(self)
 	
 	func from(value: float) -> AbsoluteSequence.Builder:
 		config.from = value

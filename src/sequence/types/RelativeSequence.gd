@@ -20,7 +20,7 @@ class Builder extends Sequence.Builder:
 		super(_builder)
 	
 	func _build() -> RelativeSequence:
-		return RelativeSequence.new(config)
+		return RelativeSequence.new(self)
 	
 	func over(value: float) -> RelativeSequence.Builder:
 		return super(value)

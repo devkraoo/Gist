@@ -1,5 +1,5 @@
 # Gist
-A tiny, type-safe, declarative 2D animation framework for Godot.
+A tiny, type-safe, declarative 2D animation library for Godot.
 
 ### GDScript
 
