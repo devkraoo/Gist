@@ -1,7 +1,7 @@
 extends Node
 class_name Runtime
 
-const UTILS = preload("res://framework/core/Utils.gd")
+const UTILS = preload("res://src/core/Utils.gd")
 
 var disptaches: Array[Dispatchable] = []
 

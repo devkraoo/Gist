@@ -8,7 +8,7 @@ func _init():
 
 
 
-var IT_class := preload("res://framework/it/IT.gd")
+var IT_class := preload("res://src/it/IT.gd")
 
 func Of(..._its) -> Gist.Animatable:
 	var its: Array[IT] = []

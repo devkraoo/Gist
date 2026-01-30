@@ -4,8 +4,8 @@ class_name Sequence
 
 var config: Sequence.Config
 
-func _init(_config: Sequence.Config):
-	config = _config
+func _init(builder: Sequence.Builder):
+	config = builder.config
 
 @abstract
 func transform(time: float, start: float) -> float
