@@ -1,6 +1,10 @@
 extends Node
 class_name Gist
 
+@export var skeleton: Skeleton
+
+
+
 static var RUNTIME: Runtime = Runtime.new()
 
 func _init():
@@ -17,8 +21,8 @@ func Of(..._its) -> Gist.Animatable:
 	var animatable = Gist.Animatable.new(its)
 	return animatable
 
-func IT(accessor: PropertyAccessor) -> IT.Builder:
-	return IT_class.Builder.new(accessor)
+func IT(builder: PropertyAccessor.Builder) -> IT.Builder:
+	return IT_class.Builder.new(builder)
 
 
 
@@ -34,4 +38,4 @@ class Animatable:
 		return self
 	
 	func play(targets: Array[Node2D]) -> Runtime.Process.Modifier:
-		return Gist.RUNTIME.dispatch(_its, targets, _reverse)
+		return #Gist.RUNTIME.dispatch(_its, targets, _reverse)

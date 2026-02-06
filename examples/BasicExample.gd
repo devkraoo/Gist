@@ -1,8 +1,6 @@
 extends Gist
 class_name BasicExample
 
-@export var skeleton: Skeleton
-
 @onready var TEST: Animatable = Of(
 	IT(skeleton.body.position.x)
 		.by(5.0).over(1.0)
