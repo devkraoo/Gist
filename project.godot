@@ -11,12 +11,13 @@ config_version=5
 [application]
 
 config/name="Gist"
+run/main_scene="uid://djxitu544mwif"
 config/features=PackedStringArray("4.5", "Mobile")
 config/icon="res://icon.svg"
 
 [dotnet]
 
-project/assembly_name="Modo"
+project/assembly_name="Gist"
 
 [rendering]
 

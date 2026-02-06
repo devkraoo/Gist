@@ -8,23 +8,25 @@ func _init():
 
 
 
-var IT_class := preload("res://src/it/IT.gd")
-
-func Of(..._its) -> Gist.Animatable:
+static func Of(..._its) -> Gist.Animatable:
 	var its: Array[IT] = []
 	for it in _its: its.append(it)
 	
 	var animatable = Gist.Animatable.new(its)
 	return animatable
 
-func IT(getter: Callable, setter: Callable) -> IT.Builder:
-	return IT_class.Builder.new(getter, setter)
+static func IT(builder: PropertyAccessor.Builder) -> IT.Builder:
+	var IT_class := preload("res://src/core/IT.gd")
+	
+	var accessor = PropertyAccessor.new(builder)
+	return IT_class.Builder.new(accessor)
 
 
 
 class Animatable:
 	var _its: Array[IT]
 	var _reverse: bool = false
+	var _modifier: Runtime.Process.Modifier
 	
 	func _init(its: Array[IT]):
 		_its = its
@@ -33,5 +35,8 @@ class Animatable:
 		_reverse = value
 		return self
 	
-	func play(targets: Array[Node2D]) -> Runtime.Process.Modifier:
-		return Gist.RUNTIME.dispatch(_its, targets, _reverse)
+	func play() -> Runtime.Process.Modifier:
+		if _modifier: _modifier.stop()
+
+		_modifier = Gist.RUNTIME.dispatch(_its, _reverse)
+		return _modifier
