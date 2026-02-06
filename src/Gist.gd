@@ -12,7 +12,7 @@ func _init():
 
 
 
-var IT_class := preload("res://src/it/IT.gd")
+var IT_class := preload("res://src/core/IT.gd")
 
 func Of(..._its) -> Gist.Animatable:
 	var its: Array[IT] = []
