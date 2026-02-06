@@ -1,10 +1,6 @@
 extends Node
 class_name Gist
 
-@export var skeleton: Skeleton
-
-
-
 static var RUNTIME: Runtime = Runtime.new()
 
 func _init():
@@ -12,16 +8,16 @@ func _init():
 
 
 
-var IT_class := preload("res://src/core/IT.gd")
-
-func Of(..._its) -> Gist.Animatable:
+static func Of(..._its) -> Gist.Animatable:
 	var its: Array[IT] = []
 	for it in _its: its.append(it)
 	
 	var animatable = Gist.Animatable.new(its)
 	return animatable
 
-func IT(builder: PropertyAccessor.Builder) -> IT.Builder:
+static func IT(builder: PropertyAccessor.Builder) -> IT.Builder:
+	var IT_class := preload("res://src/core/IT.gd")
+	
 	var accessor = PropertyAccessor.new(builder)
 	return IT_class.Builder.new(accessor)
 
