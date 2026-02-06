@@ -1,13 +1,19 @@
-[gd_scene load_steps=3 format=3 uid="uid://djxitu544mwif"]
+[gd_scene load_steps=4 format=3 uid="uid://djxitu544mwif"]
 
 [ext_resource type="Script" uid="uid://unjtpqffdxrf" path="res://examples/BasicExample.gd" id="1_nvyxf"]
 [ext_resource type="Texture2D" uid="uid://dpyhpgmj3fih7" path="res://icon.svg" id="2_dgrls"]
+[ext_resource type="Script" uid="uid://ct4mq3q1py4no" path="res://src/core/Skeleton.gd" id="2_f8hye"]
 
 [node name="BasicExample" type="Node"]
 
-[node name="Animator" type="Node" parent="."]
-script = ExtResource("1_nvyxf")
+[node name="Skeleton" type="Node" parent="."]
+script = ExtResource("2_f8hye")
+metadata/_custom_type_script = "uid://ct4mq3q1py4no"
 
-[node name="Bob" type="Sprite2D" parent="Animator"]
+[node name="Bob" type="Sprite2D" parent="Skeleton"]
 position = Vector2(289, 261)
 texture = ExtResource("2_dgrls")
+
+[node name="Animator" type="Node" parent="." node_paths=PackedStringArray("skeleton")]
+script = ExtResource("1_nvyxf")
+skeleton = NodePath("../Skeleton")
