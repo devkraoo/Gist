@@ -7,17 +7,15 @@ func _init(builder: IT.Builder):
 	config = builder.config
 
 class Config:
-	var getter: Callable
-	var setter: Callable
+	var accessor: PropertyAccessor
 	var sequences: Array[Sequence] = []
 
 class Builder:
 	var config: IT.Config
 	
-	func _init(getter: Callable, setter: Callable):
+	func _init(accessor: PropertyAccessor):
 		config = IT.Config.new()
-		config.getter = getter
-		config.setter = setter
+		config.accessor = accessor
 		config.sequences = []
 	
 	func by(value: float) -> RelativeSequence.Builder:

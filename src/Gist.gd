@@ -18,7 +18,7 @@ func Of(..._its) -> Gist.Animatable:
 	return animatable
 
 func IT(accessor: PropertyAccessor) -> IT.Builder:
-	return #IT_class.Builder.new(getter, setter)
+	return IT_class.Builder.new(accessor)
 
 
 
