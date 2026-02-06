@@ -30,6 +30,7 @@ func IT(builder: PropertyAccessor.Builder) -> IT.Builder:
 class Animatable:
 	var _its: Array[IT]
 	var _reverse: bool = false
+	var _modifier: Runtime.Process.Modifier
 	
 	func _init(its: Array[IT]):
 		_its = its
@@ -39,4 +40,7 @@ class Animatable:
 		return self
 	
 	func play() -> Runtime.Process.Modifier:
-		return Gist.RUNTIME.dispatch(_its, _reverse)
+		if _modifier: _modifier.stop()
+
+		_modifier = Gist.RUNTIME.dispatch(_its, _reverse)
+		return _modifier

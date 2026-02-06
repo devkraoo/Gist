@@ -1,43 +1,33 @@
 extends Node
 class_name Runtime
 
-var disptaches: Array[Dispatchable] = []
+var disptaches: Array[Process] = []
 
 func _process(delta: float):
 	if disptaches.is_empty(): return
 	
 	ArrayUtils.compact(disptaches,
-		func(dispatched: Dispatchable):
-			return dispatched.process.update(delta)
+		func(dispatched: Process):
+			return dispatched.update(delta)
 	)
 
 func dispatch(its: Array[IT], reverse: bool) -> Process.Modifier:
-	var dispatched = Dispatchable.new(its, reverse)
+	var dispatched = Process.new(its, reverse)
 	disptaches.append(dispatched)
 
-	return dispatched.process.modifier
-
-
-
-class Dispatchable:
-	var process: Process
-
-	func _init(its: Array[IT], reverse: bool):
-		var tracks: Array[Runtime.Track] = []
-		for i in its.size():
-			tracks.append(Runtime.Track.new(its[i], reverse))
-		
-		process = Runtime.Process.new(tracks)
+	return dispatched.modifier
 
 
 
 class Process:
-	var _tracks: Array[Runtime.Track]
+	var _tracks: Array[Runtime.Track] = []
 	var config: Config
 	var modifier: Modifier
 	
-	func _init(tracks: Array[Runtime.Track]):
-		_tracks = tracks
+	func _init(its: Array[IT], reverse: bool):
+		for i in its.size():
+			_tracks.append(Runtime.Track.new(its[i], reverse))
+		
 		config = Config.new()
 		modifier = Modifier.new(config)
 	
