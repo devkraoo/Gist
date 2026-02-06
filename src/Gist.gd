@@ -17,8 +17,8 @@ func Of(..._its) -> Gist.Animatable:
 	var animatable = Gist.Animatable.new(its)
 	return animatable
 
-func IT(getter: Callable, setter: Callable) -> IT.Builder:
-	return IT_class.Builder.new(getter, setter)
+func IT(accessor: PropertyAccessor) -> IT.Builder:
+	return #IT_class.Builder.new(getter, setter)
 
 
 
