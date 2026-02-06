@@ -5,22 +5,22 @@ var property: String
 
 func _init(builder: Builder):
 	target = builder.target
-	property = builder.property
+	property = ":".join(builder.properties)
 
 func setter(value):
-	target.set(property, value)
+	target.set_indexed(property, value)
 
 func getter():
-	return target.get(property)
+	return target.get_indexed(property)
 
 class Builder:
 	var target: Object
-	var property: String
+	var properties: Array[String] = []
 
 	func _init(_target: Object, _property: StringName):
 		target = _target
-		property = str(_property)
+		properties.append(str(_property))
 
 	func _get(_property: StringName):
-		property += str(_property)
+		properties.append(str(_property))
 		return self
