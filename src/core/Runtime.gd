@@ -13,16 +13,8 @@ func _process(delta: float):
 			return dispatched.process.update(delta)
 	)
 
-func dispatch(its: Array[IT], targets: Array[Node2D], reverse: bool) -> Process.Modifier:
-	for dispatched in disptaches:
-		var has_target = targets.any(
-			func(target: Node2D):
-				return target in dispatched.targets
-		)
-
-		if has_target: dispatched.process.modifier.stop()
-
-	var dispatched = Dispatchable.new(targets, its, reverse)
+func dispatch(its: Array[IT], reverse: bool) -> Process.Modifier:
+	var dispatched = Dispatchable.new(its, reverse)
 	disptaches.append(dispatched)
 
 	return dispatched.process.modifier
@@ -31,16 +23,11 @@ func dispatch(its: Array[IT], targets: Array[Node2D], reverse: bool) -> Process.
 
 class Dispatchable:
 	var process: Process
-	var targets: Array[Node2D]
 
-	func _init(_targets: Array[Node2D], its: Array[IT], reverse: bool):
-		targets = _targets
-		
-		if not targets.size() == its.size(): push_error("Passed in nodes must match track amount.")
-
+	func _init(its: Array[IT], reverse: bool):
 		var tracks: Array[Runtime.Track] = []
 		for i in its.size():
-			tracks.append(Runtime.Track.new(its[i], targets[i], reverse))
+			tracks.append(Runtime.Track.new(its[i], reverse))
 		
 		process = Runtime.Process.new(tracks)
 
@@ -101,19 +88,17 @@ class Process:
 
 class Track:
 	var it: IT
-	var target: Node2D
 	var config: Config
 	var snapshots: Array[Snapshot]
 	
-	func _init(_it: IT, _target: Node2D, reverse: bool):
+	func _init(_it: IT, reverse: bool):
 		it = _it
-		target = _target
 		
 		config = Config.new(reverse, it.config.sequences)
 		snapshots = Snapshot.photo(self)
 	
 	func reset():
-		it.config.setter.call(target, snapshots[0].start)
+		it.config.accessor.setter(snapshots[0].start)
 	
 	func step(delta: float) -> bool:
 		var sequences = it.config.sequences
@@ -132,7 +117,7 @@ class Track:
 			time = (1.0 - time)
 		
 		var transform = sequence.transform(time, config.start)
-		it.config.setter.call(target, transform)
+		it.config.accessor.setter(transform)
 		
 		var proceed = config.elapsed >= duration
 		if proceed: config.refresh()
@@ -172,7 +157,7 @@ class Track:
 			var config = track.it.config
 			var snapshots: Array[Snapshot] = []
 			
-			var current = config.getter.call(track.target)
+			var current = config.accessor.getter()
 			for sequence in config.sequences:
 				var last = sequence.project(current)
 				snapshots.append(
