@@ -22,7 +22,8 @@ func Of(..._its) -> Gist.Animatable:
 	return animatable
 
 func IT(builder: PropertyAccessor.Builder) -> IT.Builder:
-	return IT_class.Builder.new(builder)
+	var accessor = PropertyAccessor.new(builder)
+	return IT_class.Builder.new(accessor)
 
 
 
@@ -37,5 +38,5 @@ class Animatable:
 		_reverse = value
 		return self
 	
-	func play(targets: Array[Node2D]) -> Runtime.Process.Modifier:
-		return #Gist.RUNTIME.dispatch(_its, targets, _reverse)
+	func play() -> Runtime.Process.Modifier:
+		return Gist.RUNTIME.dispatch(_its, _reverse)

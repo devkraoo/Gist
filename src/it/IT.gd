@@ -13,9 +13,9 @@ class Config:
 class Builder:
 	var config: IT.Config
 	
-	func _init(builder: PropertyAccessor.Builder):
+	func _init(accessor: PropertyAccessor):
 		config = IT.Config.new()
-		config.accessor = PropertyAccessor.new(builder)
+		config.accessor = accessor
 		config.sequences = []
 	
 	func by(value: float) -> RelativeSequence.Builder:
