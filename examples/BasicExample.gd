@@ -1,13 +1,17 @@
 extends Gist
 class_name BasicExample
 
-@onready var TEST: Animatable = Of(
-	IT(skeleton.Bob.scale.x)
-		.by(5.0).over(1.0)
-		.then()
-		.to(10.0).over(2.0)
-		.end()
-)
+@export var Bob: Skeleton
 
 func _ready():
-	TEST.play()
+	BasicExample.TEST(Bob).play()
+
+# In another file
+static func TEST(skeleton: Skeleton) -> Gist.Animatable:
+	return Gist.Of(
+		Gist.IT(skeleton.Bob.scale.x)
+			.by(5.0).over(1.0)
+			.then()
+			.to(10.0).over(2.0)
+			.end()
+	)
