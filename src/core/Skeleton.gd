@@ -3,10 +3,10 @@ class_name Skeleton
 
 var bones = {} #Dictionary<String, Node>
 
-func _init():
+func _ready():
 	for node in get_children(): bones[node.name] = Bone.new(node)
 
-func _get(property) -> Bone:
+func _get(property: StringName) -> Bone:
 	return bones[property]
 
 class Bone:
@@ -15,5 +15,5 @@ class Bone:
 	func _init(_node: Node):
 		node = _node
 	
-	func _get(property) -> PropertyAccessor.Builder:
+	func _get(property: StringName) -> PropertyAccessor.Builder:
 		return PropertyAccessor.Builder.new(node, property)

@@ -17,9 +17,9 @@ class Builder:
 	var target: Object
 	var property: String
 
-	func _init(_target: Object, _property: String):
+	func _init(_target: Object, _property: StringName):
 		target = _target
-		property = _property
+		property = str(_property)
 
 	func _get(_property: StringName):
 		property += str(_property)
