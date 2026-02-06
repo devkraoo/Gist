@@ -1,4 +1,4 @@
-extends Node
+class_name ArrayUtils
 
 static func compact(array: Array, predicate: Callable) -> void:
 	var write_index := 0

@@ -1,14 +1,12 @@
 extends Node
 class_name Runtime
 
-const UTILS = preload("res://src/core/Utils.gd")
-
 var disptaches: Array[Dispatchable] = []
 
 func _process(delta: float):
 	if disptaches.is_empty(): return
 	
-	UTILS.compact(disptaches,
+	ArrayUtils.compact(disptaches,
 		func(dispatched: Dispatchable):
 			return dispatched.process.update(delta)
 	)
@@ -46,7 +44,7 @@ class Process:
 	func update(delta: float) -> bool:
 		if config.pause: return false
 		
-		UTILS.compact(_tracks,
+		ArrayUtils.compact(_tracks,
 			func(track: Runtime.Track):
 				if config.stop:
 					track.reset()
