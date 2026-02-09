@@ -76,48 +76,51 @@ class Process:
 
 class Track:
 	var it: IT
-	var config: Config
-	var snapshots: Array[Snapshot]
+	var state: State
 	
 	func _init(_it: IT, reverse: bool):
 		it = _it
-		
-		config = Config.new(reverse, it.config.sequences)
-		snapshots = Snapshot.photo(self)
+		state = State.new(reverse, it.config.sequences)
 	
 	func reset():
-		it.config.accessor.setter(snapshots[0].start)
+		var config = it.config
+
+		var accessor = config.accessor
+		var snapshots = config.snapshots
+
+		accessor.setter(snapshots[0].start)
 	
 	func step(delta: float) -> bool:
 		var sequences = it.config.sequences
-		
-		var current_sequence = config.current_sequence
+		var snapshots = it.config.snapshots
+
+		var current_sequence = state.current_sequence
 		var sequence: Sequence = sequences[current_sequence]
-		var snapshot: Snapshot = snapshots[current_sequence]
+		var snapshot: IT.Snapshot = snapshots[current_sequence]
 		
-		config.elapsed += delta
-		config.start = snapshot.start
+		state.elapsed += delta
+		state.start = snapshot.start
 		
 		var duration = sequence.config.duration
-		var time = clampf(config.elapsed / duration, 0.0, 1.0)
+		var time = clampf(state.elapsed / duration, 0.0, 1.0)
 
-		if config.direction == -1:
+		if state.direction == -1:
 			time = (1.0 - time)
 		
-		var transform = sequence.transform(time, config.start)
+		var transform = sequence.transform(time, state.start)
 		it.config.accessor.setter(transform)
 		
-		var proceed = config.elapsed >= duration
-		if proceed: config.refresh()
+		var proceed = state.elapsed >= duration
+		if proceed: state.refresh()
 		
-		current_sequence = config.current_sequence
+		current_sequence = state.current_sequence
 		if current_sequence < 0 or current_sequence >= sequences.size(): return true
 		
 		return false
 	
 	
 	
-	class Config:
+	class State:
 		var elapsed: float = 0.0
 		var start: float
 		var direction: int = 1
@@ -132,26 +135,3 @@ class Track:
 		func refresh():
 			elapsed = 0.0
 			current_sequence += direction
-	
-	class Snapshot:
-		var start: float
-		var end: float
-		
-		func _init(_start: float, _end: float):
-			start = _start
-			end = _end
-		
-		static func photo(track: Track) -> Array[Snapshot]:
-			var config = track.it.config
-			var snapshots: Array[Snapshot] = []
-			
-			var current = config.accessor.getter()
-			for sequence in config.sequences:
-				var last = sequence.project(current)
-				snapshots.append(
-					Snapshot.new(current, last)
-				)
-				
-				current = last
-			
-			return snapshots
