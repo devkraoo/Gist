@@ -2,7 +2,7 @@
 extends Node
 class_name Skeleton
 
-var bones = {} #Dictionary<String, Node>
+var bones: Dictionary[String, Bone] = {}
 
 func _ready():
 	for node in get_children(): 
@@ -45,10 +45,10 @@ func _validate():
 func _populate():
 	for bone in bones: set(bone, bones[bone])
 
-
-
 func _get(property: StringName) -> Bone:
 	return bones[property]
+
+
 
 class Bone:
 	var node: Node
