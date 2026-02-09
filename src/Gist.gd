@@ -25,18 +25,25 @@ static func IT(builder: PropertyAccessor.Builder) -> IT.Builder:
 
 class Animatable:
 	var _its: Array[IT]
-	var _reverse: bool = false
-	var _modifier: Runtime.Process.Modifier
+	var config: Config
 	
 	func _init(its: Array[IT]):
 		_its = its
-	
-	func reverse(value: bool) -> Animatable:
-		_reverse = value
-		return self
-	
-	func play() -> Runtime.Process.Modifier:
-		if _modifier: _modifier.stop()
+		config = Config.new()
 
-		_modifier = Gist.RUNTIME.dispatch(_its, _reverse)
-		return _modifier
+	func reverse(value: bool = true) -> Animatable:
+		config.reverse = value
+		return self
+		
+	func loop(value: bool = true) -> Animatable:
+		config.loop = value
+		return self
+
+	func play() -> Runtime.Process.Modifier:
+		return Gist.RUNTIME.dispatch(_its, config.reverse)
+
+
+
+	class Config:
+		var loop: bool = false
+		var reverse: bool = false
