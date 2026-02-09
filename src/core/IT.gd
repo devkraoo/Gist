@@ -40,23 +40,6 @@ class Builder:
 	
 	func to(value: float) -> AbsoluteSequence.Builder:
 		return AbsoluteSequence.Builder.new(self, value)
-	
-	@abstract
-	class State extends Builder:
-		@abstract
-		func transition() -> State
-
-		class Generic extends State:
-			func transition() -> Sequencer:
-				return
-			
-		class Sequencer extends State:
-			func transition() -> Transition:
-				return
-
-		class Transition extends State:
-			func transition() -> Generic:
-				return
 
 class Snapshot:
 	var start: float
@@ -65,20 +48,3 @@ class Snapshot:
 	func _init(_start: float, _end: float):
 		start = _start
 		end = _end
-
-@abstract
-class SequenceTest:
-	var config: Config
-
-	func _init(_config: Config):
-		config = _config
-
-	@abstract
-	func transform(time: float, start: float) -> float
-
-	@abstract
-	func project(start: float) -> float
-
-	@abstract
-	class Config:
-		var duration: float
