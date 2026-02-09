@@ -44,4 +44,4 @@ class Builder:
 		var sequence = _build()
 		builder.config.sequences.append(sequence)
 		
-		return IT.new(builder)
+		return IT.new(builder.config)
