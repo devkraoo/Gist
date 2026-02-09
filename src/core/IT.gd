@@ -40,6 +40,23 @@ class Builder:
 	
 	func to(value: float) -> AbsoluteSequence.Builder:
 		return AbsoluteSequence.Builder.new(self, value)
+	
+	@abstract
+	class State extends Builder:
+		@abstract
+		func transition() -> State
+
+		class Generic extends State:
+			func transition() -> Sequencer:
+				return
+			
+		class Sequencer extends State:
+			func transition() -> Transition:
+				return
+
+		class Transition extends State:
+			func transition() -> Generic:
+				return
 
 class Snapshot:
 	var start: float
